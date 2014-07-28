@@ -1,0 +1,251 @@
+<style type="text/css">
+
+body {
+  font-family: "Helvetica", sans-serif;
+  font-size: 12px;
+}
+
+span {
+ border: 1px solid;
+ padding: 4px;
+}
+
+.board {
+  display: block;
+  width: 800px;
+  border: 1px dotted;
+  margin: 0 auto;
+  margin-top: 25px;
+  text-align: center;
+}
+
+.board span {
+  display: inline-block;
+  width: 31%;
+  margin: 2px;
+}
+
+.board span label {
+  display: inline-block;
+  border: 1px solid #DCDCDC;
+  padding: 9px;
+  width: 25%;
+  height: 15px;
+  margin: 0px;
+  vertical-align: middle;
+}
+
+.board span label input {
+display: block;
+width: 30px;
+margin: 0 auto;
+-webkit-appearance: none;
+border: 1px solid #DCDCDC;
+padding: 1px;
+text-align: center;
+}
+
+</style>
+
+
+<body>
+
+ <div id="board" class="board"></div>
+
+
+<script type="text/javascript">
+
+  console.log('hello sudoku');
+
+  // Note, Here's where I first got stuck - I thought I could just keep lists and say isValid / !isValid and drop numbers in.
+  // I need to know more than just which numbers are available for the square, row and column; I need to give a value to a number to
+  // say 'i should use this now', because there's a probability that I won't be able to use it later.
+
+  // Note, know I want to have difficulty, and I give up 'solve' buttons in the UI, and I am approaching those
+  // and fundamental parts of the structure.
+
+
+  // Functions for 
+  // - make a holder.  holds 9 arrays that can be updated to show which numbers are still avaialble.
+
+  function makeHolder() {
+    var holder = {};
+    for (i = 0; i < 9; i++) {
+      holder[i] = makeList();
+    }
+    return holder;
+  }
+
+  // Make an array of numbers 1-9.  Shuffle it just to help the randomization of item placement.
+  function makeList() {
+    var array = [1,2,3,4,5,6,7,8,9];
+    return shuffleArray(array);
+  }
+
+  // Fetch a random item from an array.
+  function getRandomArrayItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  // Remove an item from an array, given a holder object, id of holder array, and the item to remove from the array.
+  function removeArrayItem(holder, id, item) {
+    var array = holder[id];
+    var index = array.indexOf(item);
+    array = array.splice(index, 1);
+    return holder;
+  }
+
+  // Randomize the arrangement of items in an array.
+  function shuffleArray(array) {
+    var newList = [];
+    while (array.length > 0) {
+      var randItem = getRandomArrayItem(array);
+      var index = array.indexOf(randItem);
+      array.splice(index, 1);
+      newList.push(randItem);
+    }
+    return newList;
+  }
+
+  // Global holders for Squares, Rows & Columns.
+  var squareOptions = makeHolder();
+  var rowOptions = makeHolder();
+  var columnOptions = makeHolder();
+
+  // Empty object that will hold the board/solution.
+  var boardObject = {};
+  var currentList;
+
+  var board = document.getElementById('board');
+
+  var easy = [true, true, true, true, true, true, false, false, false, false];
+
+  function getRandomNumber(squareIndex, rowIndex, columnIndex) {
+    var fetchANumber = getRandomArrayItem(easy);
+
+    if (fetchANumber) {
+      for (var i = 0; i < currentList.length; i++) {
+        var number = currentList[i];
+
+        var availForSquare = squareOptions[squareIndex].indexOf(number) != -1;
+        var availForRow = rowOptions[rowIndex].indexOf(number) != -1;
+        var availForColumn = columnOptions[columnIndex].indexOf(number) != -1;
+
+        if (availForSquare && availForRow && availForColumn) {
+
+          removeArrayItem(squareOptions, squareIndex, number);
+          removeArrayItem(rowOptions, rowIndex, number);
+          removeArrayItem(columnOptions, columnIndex, number);
+          currentList.splice(i, 1);
+
+          return number;
+        }
+      }
+    } else {
+      return 'xx';
+    }
+  }
+
+
+  // Make the sudoku puzzle struture one square at a time.
+  function makeSquare(squareId, rowId, columnId) {
+
+    // Create temporary row and column ids.  This allows for incrementing these ids
+    // while still remembering the starting point for the particular square.
+    var newRowId = rowId;
+    var newColumnId = columnId;
+    board.innerHTML = '';
+    // Make 9 squares.
+    while (squareId < 9) {
+
+      var span = document.createElement('span');
+      spanId = 'square_' + squareId;
+      currentList = makeList();
+
+      // Fill in the nine cells of each square
+      for (var i = 0; i < 9; i++) {
+
+        var cellId = squareId + '_' + newRowId + '_' + newColumnId;
+        var number = getRandomNumber(squareId, newRowId, newColumnId);
+
+        if (!number) {
+          console.log('one bad number');
+        }
+
+        var label = document.createElement('label');
+        label.id = cellId;
+        span.appendChild(label);
+
+        boardObject[cellId] = number;
+
+        // Choose to incememnt column
+        newColumnId += 1;
+        if (newColumnId >= columnId + 3) {
+          newColumnId = columnId;
+        }
+
+        // Choose to incremement row.
+        newRowId = (i + 1) % 3 == 0 && i != 0 ? newRowId + 1 : newRowId;
+      }
+      board.appendChild(span);
+
+      // Square ID will incrememnt by 1 every time.
+      squareId++
+
+      // Reset row id to last known base.
+      newRowId = rowId;
+
+      // Set Column id
+      columnId += 3;
+      columnId = columnId > 8 ? 0 : columnId;
+      newColumnId = columnId;
+
+      // Every three squares, reset row and incement column by 3.  No need to worry about resetting column
+      // since num of squares will run out by then.
+      if (squareId % 3 == 0) {
+        rowId += 3;
+        newRowId += 3;
+      }
+
+    }
+
+    // console.log(boardObject)
+    fillBoard();
+  }
+
+  function resetMakeSquare() {
+      // Global holders for Squares, Rows & Columns.
+    squareOptions = makeHolder();
+    rowOptions = makeHolder();
+    columnOptions = makeHolder();
+
+    // Empty object that will hold the board/solution.
+    boardObject = {};
+    makeSquare(0, 0, 0);
+  }
+
+  function fillBoard() {
+    for (var id in boardObject) {
+      if (!isNaN(boardObject[id])) {
+        document.getElementById(id).innerHTML = boardObject[id];  
+      } else {
+        var input = document.createElement('input');
+        input.type = 'text';
+        document.getElementById(id).appendChild(input);
+      }
+    }
+  }
+
+  makeSquare(0, 0, 0);
+
+
+
+</script>
+
+
+
+
+</body>
+
+
+

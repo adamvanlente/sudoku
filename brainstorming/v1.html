@@ -1,0 +1,260 @@
+<style type="text/css">
+
+body {
+  font-family: "Helvetica", sans-serif;
+  font-size: 12px;
+}
+
+span {
+ border: 1px solid;
+ padding: 4px;
+}
+
+.board {
+  display: block;
+  width: 225px;
+  border: 1px dotted #fff;
+  margin: 0 auto;
+  margin-top: 25px;
+  text-align: center;
+}
+
+.board span {
+display: inline-block;
+margin: 0px;
+height: 45px;
+width: 45px;
+font-size: 16px;
+line-height: 45px;
+}
+
+.board span label {
+  display: inline-block;
+  border: 1px solid #DCDCDC;
+  padding: 9px;
+  width: 40%;
+  height: 15px;
+  margin: 0px;
+  vertical-align: middle;
+  line-height: 90px;
+}
+
+.board span label input {
+display: block;
+width: 30px;
+margin: 0 auto;
+-webkit-appearance: none;
+border: 1px solid #DCDCDC;
+padding: 1px;
+text-align: center;
+}
+
+</style>
+
+
+<body>
+
+ <div id="board" class="board"></div>
+
+
+<script type="text/javascript">
+
+  console.log('hello sudoku');
+
+  var board = document.getElementById('board');
+
+  var grid = {
+    width: 2,
+    height: 2,
+    getArea: function() {
+      this.area = this.width * this.height;
+      delete this.getArea;
+      return this;
+    }
+  }.getArea();
+
+  function makeShuffledArray (argument) {
+    var list = [];
+    for (var i = 0; i < grid.area; i++) {
+      list.push(i + 1);
+    }
+    return shuffleArray(list);
+  }
+
+  function makeNewList() {
+    var list = [];
+    for (var i = 0; i < grid.area;i++) {
+      list.push(i);
+    }
+    return list;
+  }
+
+  // Remove an item from an array, given a holder object, id of holder array, and the item to remove from the array.
+  function removeArrayItem(holder, id, item) {
+    var array = holder[id];
+    var index = array.indexOf(item);
+    array = array.splice(index, 1);
+    return holder;
+  }
+
+  function makeDiscoveredHolder() {
+    var holder = {};
+    for (var i = 0; i < grid.area; i++) {
+      holder[i] = [];
+    }
+    return holder;
+  }
+
+  var discoveredSquareItems = makeDiscoveredHolder();
+  var discoveredRowItems = makeDiscoveredHolder();
+  var discoveredColumnItems = makeDiscoveredHolder();
+  var attempts = 0;
+  var allowedAttempts;
+  
+  // Randomize the arrangement of items in an array.
+  function shuffleArray(array) {
+    var newList = [];
+    while (array.length > 0) {
+      var randItem = getRandomArrayItem(array);
+      var index = array.indexOf(randItem);
+      array.splice(index, 1);
+      newList.push(randItem);
+    }
+    return newList;
+  }
+
+  // Fetch a random item from an array.
+  function getRandomArrayItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  function makeGrid() {
+    var columnCounter = 0;
+    var currentSquare = 0;
+    var previousRow = 0;
+    var squareCounter;
+    for (var a = 0; a < grid.area; a++) {
+      for (var i = 0; i < grid.width; i++) {
+        for (var j = 0; j < grid.height; j++) {
+          var span = document.createElement('span');
+          var colDivisor = parseInt(columnCounter / grid.width);
+          if (a >= grid.width) {
+            colDivisor += 1;
+          }
+          var rowDivisor = parseInt(a / grid.width);
+          currentSquare = colDivisor + rowDivisor;
+          var id = a + '_' + columnCounter + '_' + currentSquare;
+          span.id = id;
+          columnCounter += 1;
+          if (columnCounter >= grid.area) { columnCounter = 0; };
+          span.innerHTML = 0;
+          board.appendChild(span);
+
+        }
+      }
+    }
+  }
+
+  function getUnusedNumbers(row, permutations, list) {
+    var isValidSet = true;
+    var newSet = [];
+    for (var i = 0; i < grid.area; i++) {
+      var number = list[i];
+
+      var colDivisor = parseInt(i / grid.width);
+      if (row >= grid.width) {
+        colDivisor += 1;
+      }
+      var rowDivisor = parseInt(row / grid.width);
+      var square = colDivisor + rowDivisor;
+      console.log(square)
+
+      var unusedRow = discoveredRowItems[row].indexOf(number) == -1;
+      var unusedColumn = discoveredColumnItems[i].indexOf(number) == -1;
+      var unusedSquare = discoveredSquareItems[square].indexOf(number) == -1;
+      
+      if (unusedRow && unusedColumn) {
+        newSet.push(number);
+      } else {
+        isValidSet = false;
+      }
+    }
+      if (isValidSet) {
+        storeNumbers(newSet, row, square);
+
+      } else {
+        if (attempts < allowedAttempts) {
+          attempts += 1;
+          list = permutations[attempts]
+          getUnusedNumbers(row, permutations, list);
+        }
+      }
+  }
+
+  function listPermuatations(input) {
+    var character;
+    for (var i = 0; i < input.length; i++) {
+      character = input.splice(i, 1)[0];
+      usedChars.push(character);
+      if (input.length == 0) {
+        permArr.push(usedChars.slice());
+      }
+      listPermuatations(input);
+      input.splice(i, 0, character);
+      usedChars.pop();
+    }
+    return permArr
+  };
+
+  function storeNumbers(list, row, square) {
+    for (var i = 0; i < list.length; i++) {
+      var column = i;
+      var number = list[i];
+
+      discoveredRowItems[row].push(number);
+      discoveredColumnItems[column].push(number);
+      discoveredSquareItems[square].push(number);
+      var id = row + '_' + column + '_' + square;
+      console.log(id);
+      var el = document.getElementById(id);
+      el.innerHTML = number;
+    }
+    attempts = 0;
+  }
+
+  function completeBoardSolution() {
+    // Start from the second row, however big the grid.
+    for (var i = 0; i < 4; i++) {
+      var list = makeShuffledArray();
+      var permutations = listPermuatations(list);
+      var newList = permutations[attempts];
+      allowedAttempts = permutations.length;
+      getUnusedNumbers(i, permutations, newList)
+    }
+  }
+  
+  function init() {
+    makeGrid();
+    completeBoardSolution();
+    console.log(discoveredColumnItems);
+    console.log(discoveredSquareItems);
+    console.log(discoveredRowItems);
+  }
+
+  init()
+
+</script>
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+
+
+
