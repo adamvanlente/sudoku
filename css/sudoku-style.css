@@ -15,10 +15,18 @@ body {
   font-family: "Roboto Slab", serif;
   font-size: 32px;
   font-weight: 100;
-  /* Smart Phone styles */ }
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .header {
       font-size: 72px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .header {
+      font-size: 72px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .header {
+      font-size: 32px; } }
 
 /* Main Buttons (Start game & Solve game) */
 .buttons button {
@@ -31,11 +39,19 @@ body {
   cursor: pointer;
   border: 1px solid #5c85c2;
   border-radius: 1px;
-  /* Smart Phone styles */ }
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .buttons button {
       font-size: 48px;
       padding: 32px 16px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .buttons button {
+      font-size: 32px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .buttons button {
+      font-size: 16px; } }
 
 button.start {
   background-color: #5c85c2;
@@ -70,13 +86,27 @@ button.solve {
   width: 16px;
   height: 16px;
   vertical-align: top;
-  /* Smart Phone styles */ }
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .board span label {
       font-size: 48px;
-      padding: 32px 0 32px 32px;
+      padding: 24px 0 24px 24px;
       width: 72px;
       height: 48px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .board span label {
+      padding: 32px 0 32px 32px 32px;
+      width: 40px;
+      height: 32px;
+      font-size: 32px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .board span label {
+      padding: 32px 0 32px 32px 32px;
+      width: 24px;
+      height: 16px;
+      font-size: 16px; } }
 
 .board span label.discovered-auto {
   background-color: rgba(0, 0, 0, 0.07); }
@@ -96,29 +126,40 @@ button.solve {
 /* Number Picker and Game Message element styles */
 .number-picker,
 .game-message {
-  display: block;
   position: fixed;
-  right: 32px;
+  left: 26%;
+  right: 26%;
   padding: 8px;
-  max-width: 350px;
   border-radius: 1px;
   border: none;
+  text-align: center;
   /* Smart Phone styles */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .number-picker,
     .game-message {
-      max-width: 100%;
-      right: 12px;
-      left: 12px; } }
+      max-width: 100%; } }
 
 .game-message {
   top: 32px;
   background-color: #ec6475;
   color: white;
-  /* Smart Phone styles */ }
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .game-message {
       font-size: 48px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .game-message {
+      font-size: 32px;
+      top: 16px;
+      left: 16%;
+      right: 16%; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .game-message {
+      font-size: 16px;
+      left: 26%;
+      right: 26%; } }
   .game-message span {
     text-decoration: underline;
     opacity: 0.7;
@@ -126,12 +167,25 @@ button.solve {
     cursor: pointer; }
 
 .number-picker {
-  top: 80px;
+  top: 16px;
   background-color: #5c85c2;
-  /* Smart Phone styles */ }
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .number-picker {
       top: 16px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .number-picker {
+      font-size: 32px;
+      left: 10%;
+      right: 10%; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .number-picker {
+      font-size: 16px;
+      top: 16px;
+      left: 16%;
+      right: 16%; } }
   .number-picker button {
     display: inline-block;
     -webkit-appearance: none;
@@ -144,10 +198,18 @@ button.solve {
     font-family: "Roboto Slab", serif;
     font-weight: 300;
     color: #464444;
-    /* Smart Phone styles */ }
+    /* Smart Phone styles */
+    /* Tablet styles */
+    /* Tablet styles (landscape) */ }
     @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
       .number-picker button {
         font-size: 48px; } }
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+      .number-picker button {
+        font-size: 32px; } }
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+      .number-picker button {
+        font-size: 16px; } }
   .number-picker button:hover {
     opacity: 0.9; }
 
@@ -163,13 +225,27 @@ button.solve {
   display: none;
   top: 25%;
   border-radius: 1px;
-  /* Smart Phone styles */ }
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .solving-status {
       left: 10%;
       right: 10%;
       font-size: 56px;
       padding: 48px; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .solving-status {
+      font-size: 32px;
+      left: 25%;
+      right: 25%;
+      text-align: center; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .solving-status {
+      font-size: 16px;
+      left: 15%;
+      right: 15%;
+      text-align: center; } }
   .solving-status span {
     display: block;
     background-color: white;

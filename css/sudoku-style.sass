@@ -32,7 +32,15 @@ body
 
  /* Smart Phone styles
  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
-  font-size: $smart-phone-font-large 
+  font-size: $smart-phone-font-large
+
+ /* Tablet styles
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  font-size: $smart-phone-font-large
+
+ /* Tablet styles (landscape)
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)  
+  font-size: $med-tab-font
 
 
 /* Main Buttons (Start game & Solve game)
@@ -53,6 +61,14 @@ body
  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
   font-size: $smart-phone-font
   padding: $four-grid $double-grid
+
+ /* Tablet styles
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  font-size: $med-tab-font
+ 
+ /* Tablet styles (landscape)
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)  
+  font-size: $med-tab-font / 2
 
 button.start 
  background-color: $sudokblue
@@ -94,9 +110,23 @@ button.solve
  /* Smart Phone styles
  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
   font-size: $smart-phone-font
-  padding: $four-grid 0 $four-grid $four-grid
+  padding: ($grid * 3) 0 ($grid * 3) ($grid * 3)
   width: $grid * 9
   height: $grid * 6
+ 
+ /* Tablet styles
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  padding: $four-grid 0 $four-grid $four-grid $four-grid
+  width: $grid * 5
+  height: $grid * 4
+  font-size: $med-tab-font
+ 
+ /* Tablet styles (landscape)
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)
+  padding: $four-grid 0 $four-grid $four-grid $four-grid
+  width: $grid * 3
+  height: $grid * 2
+  font-size: $med-tab-font / 2
 
 .board span label.discovered-auto 
  background-color: rgba(0,0,0,.07)
@@ -119,19 +149,17 @@ button.solve
 
 .number-picker,
 .game-message
- display: block
  position: fixed
- right: $four-grid
+ left: 26%
+ right: 26%
  padding: $grid
- max-width: 350px
  border-radius: $border-and-radius
  border: none
+ text-align: center
 
  /* Smart Phone styles
  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
   max-width: 100%
-  right: $grid * 1.5
-  left: $grid * 1.5
 
 .game-message
  top: $four-grid
@@ -142,6 +170,19 @@ button.solve
  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
   font-size: $grid * 6
 
+ /* Tablet styles
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  font-size: $med-tab-font
+  top: $double-grid
+  left: 16%
+  right: 16%
+
+ /* Tablet styles (landscape)
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape)  
+  font-size: $med-tab-font / 2
+  left: 26%
+  right: 26%
+
  span
   text-decoration: underline
   opacity: 0.7
@@ -149,12 +190,25 @@ button.solve
   cursor: pointer
 
 .number-picker
- top: $grid * 10
+ top: $double-grid
  background-color: $sudokblue
  
  /* Smart Phone styles
  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
   top: $double-grid
+ 
+ /* Tablet styles
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  font-size: $med-tab-font
+  left: 10%
+  right: 10%
+
+ /* Tablet styles (landscape)
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape)
+  font-size: $med-tab-font / 2
+  top: $double-grid
+  left: 16%
+  right: 16%
 
  button
   display: inline-block
@@ -172,7 +226,15 @@ button.solve
   /* Smart Phone styles
   @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
    font-size: $grid * 6
+
+  /* Tablet styles
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+   font-size: $med-tab-font
  
+  /* Tablet styles (landscape)
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape)
+   font-size: $med-tab-font / 2
+
  button:hover
   opacity: 0.9
 
@@ -198,6 +260,20 @@ button.solve
   right: 10%
   font-size: $grid * 7
   padding: $grid * 6
+
+ /* Tablet styles
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+  font-size: $med-tab-font
+  left: 25%
+  right: 25%
+  text-align: center
+
+ /* Tablet styles (landscape)
+ @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape)
+  font-size: $med-tab-font / 2
+  left: 15%
+  right: 15%
+  text-align: center
 
  span
   display: block
