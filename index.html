@@ -11,13 +11,13 @@
   <div id="board" class="board"></div>
 
   <div id="buttons" class="buttons">
-   <button id="start-button" class="start" onclick="">start new game</button>
-   <button id="solve-button" class="solve" onclick="">solve board</button>
+   <button id="start-button" class="start" onclick="Sudoku.game.init()">start new game</button>
+   <button id="solve-button" class="solve" onclick="Sudoku.game.validateBeforeSolve()">solve board</button>
   </div>
 
-  <script type="text/javascript" src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/sudoku.js"></script>
-
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/underscore.js"></script>
+<script type="text/javascript" src="js/sudoku.js"></script>
  </body>
 
 </html>

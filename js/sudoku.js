@@ -95,6 +95,101 @@ var Sudoku = {
     }
   },
 
+
+
+  game: {
+
+    
+    //!! Seems calling to outside functions here can ruin performance/ability to find a solution.
+    // EG call out to this.rememeberNumber cannot, then immediately to this.forgetNumber often
+    // fails to remember/remove number properly.  Seeing many weird errors.  Likely have to leave
+    // code as is to continue seeing reliable performance (will be repeating code in a handful of places
+    //  as a result).
+    solveBoard: function() {
+      var nextAvailableCell = this.getNextAvailableCell();
+      if (!nextAvailableCell) {
+        setTimeout(function(){
+            if (Sudoku.game.started) {
+              $('#solving-status').attr('class', 'solving-status');
+              $('#solving-status').addClass('animated bounceOutUp');
+              this.started = false;
+            }
+          }, 2000);
+        return true;
+      } else {
+
+        // SET CELL ID AND GET ITS LOCATION
+
+        var cellId = nextAvailableCell.id;
+
+        var idArray = cellId.split('_');
+        var squareId = idArray[0];
+        var rowId = idArray[1];
+        var columnId = idArray[2];
+
+        // BE SURE TO KNOW WHICH CELLS ARE OCCUPIED WITH WHAT
+
+        var currentSquare = this.occupied.squares[squareId];
+        var currentRow = this.occupied.rows[rowId];
+        var currentColumn = this.occupied.columns[columnId];
+
+        //GETTING AVAILABLE NUMBERS;
+
+        var newRange = _.range(1, Sudoku.grid.area + 1);
+        var availableNumbers = [];
+        for (var i = 0; i < newRange.length; i++) {
+          var newNumber = newRange[i];
+
+          var validForSquare = currentSquare.indexOf(newNumber) == -1;
+          var validForRow = currentRow.indexOf(newNumber) == -1;
+          var validForColumn = currentColumn.indexOf(newNumber) == -1;
+
+          if (validForSquare && validForRow && validForColumn) {
+            availableNumbers.push(newNumber);
+          }
+        }
+      
+        availableNumbers = _.shuffle(availableNumbers);
+
+        for (var j = 0; j < availableNumbers.length; j++) {
+          var number = availableNumbers[j];
+
+          $('#' + cellId).html(number);
+
+          // NOTE: Cannot make call to outside function - does not perform quickly enough.
+          this.occupied.squares[squareId].push(number);
+          this.occupied.rows[rowId].push(number);
+          this.occupied.columns[columnId].push(number);
+
+          this.allBoardCells[cellId]["value"] = number;
+
+          if (this.solveBoard()) {
+            return true;
+          } else {
+            
+            // BACKITUP
+
+            // NOTE: Cannot make call to outside function - does not perform quickly enough.
+            $('#' + cellId).empty();
+
+            var squareIndex = this.occupied.squares[squareId].indexOf(number);
+            this.occupied.squares[squareId].splice(squareIndex, 1);
+
+            var rowIndex = this.occupied.rows[rowId].indexOf(number);
+            this.occupied.rows[rowId].splice(rowIndex, 1);
+
+            var columnIndex = this.occupied.columns[columnId].indexOf(number);
+            this.occupied.columns[columnId].splice(columnIndex, 1);
+
+            this.allBoardCells[cellId]["value"] = false;
+          }
+        }
+        return false;
+      }
+    }
+  },
+
+
   init: function() {
     this.board.createBoard();
   }
