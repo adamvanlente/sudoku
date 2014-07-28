@@ -1,0 +1,215 @@
+@import _sass_globals.sass
+
+//
+// Styles Below
+//
+
+/* Body Style
+//
+
+body
+ font-family: $roboto
+ color: $roboto-color
+ font-size: $roboto-size
+
+
+/* Shared Styles
+//
+
+.buttons,
+.header 
+ display: block
+ text-align: center
+
+
+/* Header element
+//
+
+.header
+ font-family: $roboto
+ font-size: $grid * 4
+ font-weight: $roboto-weight
+
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  font-size: $smart-phone-font-large 
+
+
+/* Main Buttons (Start game & Solve game)
+//
+
+.buttons button
+ font-family: $roboto
+ font-weight: $roboto-weight
+ font-size: $roboto-size
+ -webkit-appearance: none
+ border-radius: $border-and-radius
+ padding: $grid
+ cursor: pointer
+ border: $border-and-radius solid $sudokblue
+ border-radius: $border-and-radius
+
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  font-size: $smart-phone-font
+  padding: $four-grid $double-grid
+
+button.start 
+ background-color: $sudokblue
+ color: $light-text
+
+button.solve 
+ background-color: $light-text
+ color: $sudokblue
+ 
+
+/* Board styles
+//
+
+.board
+ display: table
+ margin: 0 auto
+ text-align: center
+ background-color: $board-gray
+ box-shadow: 0 0 $grid $shadow-color
+ margin-top: $four-grid
+ margin-bottom: $four-grid
+
+.board .square-row,
+.board .square-inner-row 
+ display: table-row
+
+.board span 
+ display: inline-block
+ border: 2px solid rgb(92, 133, 194)
+
+.board span label 
+ display: -webkit-inline-box
+ border: $border-and-radius solid rgba(143, 145, 148, 0.79)
+ padding: $double-grid $grid $double-grid $double-grid
+ width: $double-grid 
+ height: $double-grid 
+ vertical-align: top
+
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  font-size: $smart-phone-font
+  padding: $four-grid 0 $four-grid $four-grid
+  width: $grid * 9
+  height: $grid * 6
+
+.board span label.discovered-auto 
+ background-color: rgba(0,0,0,.07)
+ 
+.currently-adding
+ background-color: rgba(143, 145, 148, 0.79)
+ color: $light-text
+
+.discovered-auto
+ font-weight: bold
+ color: #8D8686
+
+.invalid-cell
+ background-color: rgb(209, 118, 118)
+ color: $light-text
+
+
+/* Number Picker and Game Message element styles
+//
+
+.number-picker,
+.game-message
+ display: block
+ position: fixed
+ right: $four-grid
+ padding: $grid
+ max-width: 350px
+ border-radius: $border-and-radius
+ border: none
+
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  max-width: 100%
+  right: $grid * 1.5
+  left: $grid * 1.5
+
+.game-message
+ top: $four-grid
+ background-color: $message-red
+ color: $light-text
+
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  font-size: $grid * 6
+
+ span
+  text-decoration: underline
+  opacity: 0.7
+  margin-left: $grid
+  cursor: pointer
+
+.number-picker
+ top: $grid * 10
+ background-color: $sudokblue
+ 
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  top: $double-grid
+
+ button
+  display: inline-block
+  -webkit-appearance: none
+  background-color: white
+  border: $border-and-radius solid DCDCDC
+  border-radius: $border-and-radius
+  padding: $grid $double-grid
+  cursor: pointer
+  -webkit-transition: 0.2s
+  font-family: $roboto
+  font-weight: 300
+  color: #464444
+
+  /* Smart Phone styles
+  @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+   font-size: $grid * 6
+ 
+ button:hover
+  opacity: 0.9
+
+
+/* Solving Status message element
+//
+
+.solving-status
+ background-color: $sudokblue
+ position: fixed
+ left: 40%
+ right: 40%
+ padding: $four-grid
+ color: $light-text
+ box-shadow: 0 0 $grid $shadow-color
+ display: none
+ top: 25%
+ border-radius: $border-and-radius
+
+ /* Smart Phone styles
+ @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+  left: 10%
+  right: 10%
+  font-size: $grid * 7
+  padding: $grid * 6
+
+ span
+  display: block
+  background-color: $light-text
+  color: $sudokblue
+  text-align: center
+  width: 80%
+  padding: $grid ($grid / 2)
+  margin: 0 auto
+  margin-top: $grid * 4
+  border-radius: $border-and-radius
+  cursor: pointer
+
+.solving-status.invisible
+ top: -($grid * 10)
