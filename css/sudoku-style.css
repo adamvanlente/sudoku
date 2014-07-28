@@ -1,0 +1,75 @@
+ body {
+  font-family: "Helvetica", sans-serif;
+  font-size: 13px;
+  color: #333;
+ }
+ 
+ .header {}
+
+ .board {
+  display: table;
+  width: auto;
+  margin: 0 auto;
+  text-align: center;
+  background-color: beige;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  margin-top: 25px;
+  margin-bottom: 25px;
+ }
+
+ .board .square-row {
+  display: table-row;
+ }
+
+ .board .square-inner-row {
+  display: table-row;
+ }
+
+ .board .sudoku-square {}
+
+ .board span {
+  display: inline-block;
+  border: 3px solid green ;
+ }
+
+ .board span label.discovered-auto {
+  background-color: rgba(0,0,0,.07);
+ }
+
+ .board span label {
+  display: -webkit-inline-box;
+  border: 1px solid green;
+  padding: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: top;
+ }
+
+ .board span label input[type=text] {}
+
+ .buttons {}
+
+ .buttons button {
+  -webkit-appearance: none;
+  border-radius: 1px;
+  padding: 8px;
+  cursor: pointer;  
+ }
+
+ .buttons button.start {
+  border: 1px solid #27853A;
+  background-color: rgb(117, 184, 117);
+  color: #fff;  
+ }
+
+  .buttons button.solve {
+  border: 1px solid #27853A;
+  background-color: rgb(184, 138, 117);
+  color: #fff;
+ }
+
+ .buttons,
+ .header {
+  display: block;
+  text-align: center;
+ }
