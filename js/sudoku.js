@@ -9,7 +9,7 @@ var Sudoku = {
   grid: {
 
     // Set the size of the Sudoku board dimensions, eg 3x3, or 2x2.
-    dimension: 3,
+    dimension: 2,
 
     // Set some globally needed variables for building the grid.
     getArea: function() {
@@ -197,7 +197,6 @@ var Sudoku = {
       Sudoku.tools.resetElements();
       Sudoku.board.reset();
       this.occupied.reset();
-      this.started = true;
       this.allBoardCells = {};
       this.fillBoardObject();
     },
@@ -228,6 +227,7 @@ var Sudoku = {
         var cell = randCells[j];
         this.forgetNumber(cell.id);
       }
+      this.started = true;
     },
 
     // Populates an object that holds the ID and value of each cell for easy access.
@@ -342,6 +342,7 @@ var Sudoku = {
      * indicating so.  If not, continue to 
      */
     validateBeforeSolve: function() {
+      $('#solving-status').attr('class', 'solving-status');
       if (!this.started) {
         return false;
       }
@@ -352,6 +353,8 @@ var Sudoku = {
         Sudoku.tools.message(message);
         return false;
       }
+      
+      Sudoku.game.rememberUserInput();
 
       /* If no empty cells remain, puzzle has been solved.  If no duplicate cells were found
        * above, and cells are all filled, it follows that the puzzle has been filled out
@@ -377,7 +380,6 @@ var Sudoku = {
         // In some cases, it may take a moment to solve a puzzle.  Give a message div a moment
         // to load before the solver takes all the browsers attention.
         setTimeout(function() {
-            Sudoku.game.rememberUserInput();
             Sudoku.game.solveBoard();
           }, 1000);
       }
