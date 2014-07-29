@@ -358,7 +358,7 @@ var Sudoku = {
 
     /* When a user attempts to solve a puzzle, determine if there are duplicate
      * values in a particular square, row or column.  If so, deliver a message
-     * indicating so.  If not, continue to 
+     * indicating so.  If not, continue to solving.
      */
     validateBeforeSolve: function() {
       // $('#solving-status').attr('class', 'solving-status');
@@ -373,14 +373,26 @@ var Sudoku = {
         Sudoku.tools.message.open(message);
         return false;
       }
-      
       Sudoku.game.rememberUserInput();
+    },
 
-      /* If no empty cells remain, puzzle has been solved.  If no duplicate cells were found
-       * above, and cells are all filled, it follows that the puzzle has been filled out
-       * completely and correctly.  Give the user a message.
-       */
+    // Before solving, collect all user update fields and remember their values.
+    rememberUserInput: function() {
+      var userSubmittedCells = $('.user-input');
+      for (var i = 0; i < userSubmittedCells.length; i++) {
+        var cellId = userSubmittedCells[i].id;
+        var number = $('#' + cellId).html();
+        this.rememberNumber(cellId, number);
+      }
       var emptyCellsRemain = this.getNextAvailableCell();
+      this.finishPuzzleValidation(emptyCellsRemain);
+    },
+
+    /* If no empty cells remain, puzzle has been solved.  If no duplicate cells were found
+     * above, and cells are all filled, it follows that the puzzle has been filled out
+     * completely and correctly.  Give the user a message.
+     */
+    finishPuzzleValidation: function(emptyCellsRemain) {
       if (!emptyCellsRemain) {
         $('#solving-status').show();
         $('#solving-status').html('Congratulations!  You solved the puzzle!');
@@ -402,16 +414,6 @@ var Sudoku = {
         setTimeout(function() {
             Sudoku.game.solveBoard();
           }, 1000);
-      }
-    },
-
-    // Before solving, collect all user update fields and remember their values.
-    rememberUserInput: function() {
-      var userSubmittedCells = $('.user-input');
-      for (var i = 0; i < userSubmittedCells.length; i++) {
-        var cellId = userSubmittedCells[i].id;
-        var number = $('#' + cellId).html();
-        this.rememberNumber(cellId, number);
       }
     },
 
