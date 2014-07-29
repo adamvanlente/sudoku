@@ -58,13 +58,15 @@ The main unfinished item I had was to determine some kind of difficulty rating. 
 
 Other unfinished business:
 
+ - If I had an extra day, I may have tried to fit this code into some sort of JS pattern, but only to show that I'm aware of/familiar with such patterns, not because I think the project warranted one.
+
  - I have a hint mode option that is about 90% functional.  It highlights a cell is the user submitted number is invalid (eg 8 in a row where 8 already exists).  When I didn't have time to finish the feature's toggle in the UI, I felt it was better defaulted to OFF.
 
  - I have the code set up to accept different grid sizes, and I wanted a toggle in the UI that let the user switch between 2x2 grid and the standard 3x3.  2x2 grids are a lot easier, and I had a lot of fun using that size to prototype my board.  The functionality is available but, again, I didn't make the time to put this into the UI.
 
 ### Tests
 
-I kept a record of some tests I did while tinkering with how many cells to fill as a starting point for the game.
+I kept a record of some tests I did while tinkering with how many cells to fill as a starting point for the game.  The tables below show how long it took for my 'solveBoard' algorithm to find a solution, how many recursive searches it made, and how many times it backtracked.
 
 #### Random board fill method (fill a random number of squares with valid numbers):
 
@@ -96,6 +98,4 @@ I kept a record of some tests I did while tinkering with how many cells to fill 
 -----------------------------------------------------------------
         Average        78ms       1,334            1,279</pre>
 
- * As we can see, the second method is an order of magnitude faster on average.  This does not speculate on how easy/difficult for a human the resulting puzzle are to solve, but that was not the aim of these tests.
-
-git 
+ * As we can see, the second method is an order of magnitude faster on average.  This does not speculate on how easy/difficult for a human the resulting puzzle are to solve, but that was not the aim of these tests.  I wanted this part to run fast and reliably, so the latter method is what was implemented.

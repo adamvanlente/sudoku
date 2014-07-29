@@ -20,7 +20,9 @@ body {
   /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .header {
-      font-size: 72px; } }
+      font-size: 72px;
+      margin-top: 64px;
+      margin-bottom: 64px; } }
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .header {
       font-size: 72px; } }
@@ -66,49 +68,57 @@ button.solve {
 /* Board styles */
 .board {
   background-color: #e9e9e9;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   display: table;
-  margin: 0 auto;
-  margin-top: 32px;
-  margin-bottom: 32px;
+  margin: 32px auto;
   text-align: center; }
 
-.board .square-row,
+/* Board square row (row of n squares) */
+.board .square-row {
+  display: block;
+  width: auto; }
+
+/* Board square inner row (row of n cells within a square) */
 .board .square-inner-row {
-  display: table-row; }
+  display: block;
+  width: auto; }
 
 .board span {
   border: 2px solid #5c85c2;
   display: inline-block; }
 
 .board span label {
-  border: 1px solid rgba(143, 145, 148, 0.79);
-  display: -webkit-inline-box;
-  height: 16px;
-  padding: 16px 8px 16px 16px;
-  width: 16px;
-  vertical-align: top;
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  padding: 4px;
+  vertical-align: text-bottom;
+  border: 1px solid #5c85c2;
+  line-height: 32px;
   /* Smart Phone styles */
   /* Tablet styles */
   /* Tablet styles (landscape) */ }
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .board span label {
       font-size: 48px;
-      height: 48px;
-      padding: 24px 0 24px 24px;
-      width: 72px; } }
+      height: 67px;
+      padding: 12px;
+      width: 67px;
+      line-height: 72px; } }
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .board span label {
       font-size: 32px;
-      height: 32px;
-      padding: 32px 0 32px 32px 32px;
-      width: 40px; } }
+      height: 56px;
+      padding: 8px;
+      width: 56px;
+      line-height: 56px; } }
   @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
     .board span label {
       font-size: 16px;
-      height: 16px;
-      padding: 32px 0 32px 32px 32px;
-      width: 24px; } }
+      height: 32px;
+      padding: 8px;
+      width: 32px;
+      line-height: 32px; } }
 
 .board span label.discovered-auto {
   background-color: rgba(0, 0, 0, 0.07); }
@@ -139,7 +149,9 @@ button.solve {
   @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
     .number-picker,
     .game-message {
-      max-width: 100%; } }
+      left: 0;
+      right: 0;
+      top: 0; } }
 
 .game-message {
   top: 32px;
@@ -264,3 +276,79 @@ button.solve {
 
 .solving-status.invisible {
   top: -80px; }
+
+/* Welcome message */
+.welcome {
+  display: none;
+  position: fixed;
+  background-color: #bcc363;
+  top: 20%;
+  left: 35%;
+  right: 35%;
+  padding: 32px;
+  text-align: center;
+  border-radius: 1px;
+  box-shadow: rgba(0, 0, 0, 0.1);
+  font-weight: 100;
+  /* Smart Phone styles */
+  /* Tablet styles */
+  /* Smart Phone styles */ }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+    .welcome {
+      bottom: 5%;
+      top: 5%;
+      left: 5%;
+      right: 5%;
+      border: 5px solid #777474; } }
+  @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .welcome {
+      top: 20%;
+      left: 20%;
+      right: 20%;
+      border: 2px solid #777474; } }
+  .welcome h1,
+  .welcome h2,
+  .welcome button {
+    font-weight: 100;
+    color: white; }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+    .welcome {
+      font-size: 32px; } }
+  .welcome h1 {
+    font-size: 32px;
+    /* Smart Phone styles */ }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+      .welcome h1 {
+        font-size: 128px;
+        padding: 0;
+        margin: 0;
+        margin-top: 256px; } }
+  .welcome button {
+    font-weight: 300;
+    display: inline;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+    background-color: white;
+    border: 1px solid white;
+    padding: 16px 32px;
+    border-radius: 1px;
+    color: #bcc363;
+    font-family: "Roboto Slab", sans-serif;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    /* Smart Phone styles */ }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+      .welcome button {
+        padding: 32px 64px;
+        font-size: 64px;
+        margin-top: 32px; } }
+  .welcome button:hover {
+    background-color: #bcc363;
+    color: white; }
+  .welcome a,
+  .welcome a:visited,
+  .welcome a:hover {
+    color: white; }

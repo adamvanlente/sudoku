@@ -1,6 +1,6 @@
 /* Namespace for Sudoku game.
-* Contains properties grid, board, game, tools & picker (picks numbers for cells).
-*/
+ * Contains properties grid, board, game, tools & picker (picks numbers for cells).
+ */
 var Sudoku = {
 
   /* Grid: Set up the height and width of the grid, and compute
@@ -32,39 +32,34 @@ var Sudoku = {
    */
   board: {
 
-    // Identify the board element for easy access and readability.
-    boardElement: $('#board'),
-
     // Keep track of current square while the board is being built.
     squareCounter: 0,
 
-    /* Create the elements of the board.  It will be structured like
-     * a table - it will have large rows and columns to hold the squares.
+    // Reset the board to its original state.
+    reset: function() {
+      var cells = $('.number-cell');
+      _.each(cells, function(cell) {
+          Sudoku.board.populateCellHolder(cell.id);
+        });
+    },
+
+    // Populates an object that holds the ID and value of each cell for easy access.
+    populateCellHolder: function(cellId) {
+      Sudoku.game.allBoardCells[cellId] = {};
+      Sudoku.game.allBoardCells[cellId]["id"] = cellId;
+      Sudoku.game.allBoardCells[cellId]["value"] = false;
+      $('#' + cellId).attr('class', 'number-cell discovered-auto');
+    },
+
+    /* Create the elements of the board.
      * Start by making n rows where n = grid.height.
      */
     createBoard: function() {
-      this.boardElement.html('');
+      $('#board').html('');
       for (var i = 0; i < Sudoku.grid.height; i++) {
         this.makeBoardRow(i);
       }
-    },
-
-    // Reset the board to its original state.
-    reset: function() {
-      for (var item in Sudoku.game.currentBoard) {
-        $('#' + item).empty();
-        Sudoku.game.currentBoard[item] = true;
-      }
-      this.resetCells();
-    },
-
-    // Reset all cells to their initial number-cell class
-    resetCells: function() {
-      var startingClass = 'number-cell';
-      var cells = $('.' + startingClass);
-      _.each(cells, function(cell){
-          $('#' + cell.id).attr('class', startingClass);
-        });
+      this.reset();
     },
 
     // Make a row that will hold n squares, where n = grid.width.
@@ -75,12 +70,12 @@ var Sudoku = {
       for (var i = 0; i < Sudoku.grid.width; i++) {
         this.makeSudokuSquares(row, i, index);
       }
-      Sudoku.board.boardElement.append(row);
+      $('#board').append(row);
     },
 
     /* Function that makes a Sudoku square.  Square will eventually
-    * contain n cells for numbers, where n = grid.area.
-    */
+     * contain n cells for numbers, where n = grid.area.
+     */
     makeSudokuSquares: function(row, boardCols, boardRows) {
       var squareSpan = $(document.createElement('span'));
       var squareId = this.squareCounter;
@@ -115,8 +110,8 @@ var Sudoku = {
       var cellId = squareId + '_' + rowId + '_' + columnId;
       numberCell.attr('id', cellId);
       numberCell.attr('class', 'number-cell');
-      Sudoku.game.currentBoard[cellId] = true;
-      // Hold an item in our board object for each cell.
+
+      // Append an item to our board object for each cell.
       parentRow.append(numberCell);
     }
     // End board object
@@ -139,48 +134,54 @@ var Sudoku = {
       return object;
     },
 
-    // Display a message in the UI.
-    message: function(messageText) {
-      $('#game-message').empty();
-      $('#game-message').show();
-      $('#game-message').html(messageText);
-      $('#game-message').addClass('animated bounceInRight');
-      var span = $(document.createElement('span'));
-      span.html('close');
-      span.click(function() {
-          Sudoku.tools.closeMessage();
-        });
-      $('#game-message').append(span);
+    // Open/close a UI message.
+    message: {
+
+      open: function(messageText) {
+        $('#game-message').empty();
+        $('#game-message').show();
+        $('#game-message').html(messageText);
+        $('#game-message').attr('class', 'game-message animated bounceInRight');
+        var span = $(document.createElement('span'));
+        span.html('dismiss');
+        span.click(function() {
+            Sudoku.tools.message.close();
+          });
+        $('#game-message').append(span);
+      },
+
+      close: function() {
+        $('#game-message').attr('class', 'game-message animated bounceOutRight');
+      }
+
     },
 
-    // Close the UI message.
-    closeMessage: function() {
-    $('#game-message').show();
-    $('#game-message').attr('class', 'game-message');
-    $('#game-message').addClass('animated bounceOutRight');
-    setTimeout(function() {
-        $('#game-message').attr('class', 'game-message');
-        $('#game-message').hide();
-      }, 1000);
-    },
-
-    // Reset main elements in the UI.
-    setElements: function() {
-      $('#solving-status').attr('class', 'solving-status');
+    // Element styles to set on page load.
+    pageLoadElements: function() {
+      $('#welcome').show();
+      $('#welcome').attr('class', 'welcome bounceIn animated');
+      $('#solve-button').hide();
+      $('#start-button').hide();
       $('#solving-status').hide();
-      $('#number-picker').attr('class', 'number-picker');
       $('#number-picker').hide();
-      $('#game-message').attr('class', 'game-message');
       $('#game-message').hide();
+    },
+
+    // Set main elements in the UI to their resting state/classes.
+    setElements: function() {
+      $('#solving-status').hide();
+      $('#solving-status').attr('class', 'solving-status');
+      $('#number-picker').hide();
+      $('#game-message').hide();
+      $('#solve-button').show();
+      $('#start-button').show();
+      $('#welcome').attr('class', 'welcome bounceOutUp animated');
     }
     // End tools object
   },
 
   // Game object handles all game logic, and kicks off several UI interactions.
   game: {
-
-    // Make a object that represents the current board.
-    currentBoard: {},
 
     /* Keep a object that holds all cells.  This object will indicate which cells
      * are filled, and what their value is.
@@ -193,7 +194,10 @@ var Sudoku = {
     hintMode: false,
 
     // Determines if a game is currently in progress.
-    started: false,
+    inProgress: false,
+
+    // Holder to keep track of a timeout on a solving message (so it can be easily killed).
+    solvingTimeout: false,
 
     /* Start a new game.  Reset all UI & board elements.  Reset occupied
      * memory objects and the allBoardCells object so that a blank board
@@ -201,13 +205,24 @@ var Sudoku = {
      */
     init: function() {
       Sudoku.tools.setElements();
-      Sudoku.board.reset();
-      this.occupied.reset();
-      this.allBoardCells = {};
-      this.fillBoardObject();
+      this.resetMemory();
+      this.createSolvablePuzzle();
+      clearInterval(this.solvingTimeout);
     },
 
-    // Remember which cells are occupied, and with what.
+    /* Clear memory, a) objects holding lists of numbers present in squares,
+     * rows and columns, and b) the object holding every ID and available
+     * value of each cell.
+     */
+    resetMemory: function() {
+      this.occupied.reset();
+      this.allBoardCells = {};
+    },
+
+    /* Remember which cells are occupied, and with what.  These occupied
+     * holders can be accessed like so: Sudoku.game.occupied.squares[SQUARE_ID]
+     * will return a list of all numbers present in square with id SQUARE_ID.
+     */
     occupied: {
 
       reset: function() {
@@ -216,32 +231,29 @@ var Sudoku = {
         this.columns = Sudoku.tools.makeHolderForMemory();
         return this;
       }
+
     },
 
-    /* Fill an empty board with random numbers to start the game.  Function actually
-     * operates by filling the entire board with a valid, completed Sudoku, then removes
-     * random numbers to create a game board.
+    /* Fill an empty board with random numbers to start the game.  Function
+     * operates by filling the entire board with a valid, completed Sudoku,
+     * then removes random numbers to create a game board.
      */
-    fillBoardObject: function() {
-      var cells = $('.number-cell');
-      for (var i = 0; i < cells.length; i++) {
-        this.populateCellHolder(cells[i]);
-      }
+    createSolvablePuzzle: function() {
+      // Reset board, regardless of current state.
+      Sudoku.board.reset();
+
+      // Solve a blank puzzle - all cells will contain valid numbers.
       this.solveBoard();
+
+      // Randomly clear board cells, the maximum number of which is pre-determined.
+      var cells = $('.number-cell');
       var randCells = _.shuffle(cells);
-      for (var j = 0; j < (randCells.length - Sudoku.grid.randomCellsAllowed); j++) {
+      var randomCellsToClear = randCells.length - Sudoku.grid.randomCellsAllowed;
+      for (var j = 0; j < randomCellsToClear; j++) {
         var cell = randCells[j];
         this.forgetNumber(cell.id);
       }
-      this.started = true;
-    },
-
-    // Populates an object that holds the ID and value of each cell for easy access.
-    populateCellHolder: function(cell) {
-      this.allBoardCells[cell.id] = {};
-      this.allBoardCells[cell.id]["id"] = cell.id;
-      this.allBoardCells[cell.id]["value"] = false;
-      $('#' + cell.id).attr('class', 'number-cell discovered-auto');
+      this.inProgress = true;
     },
 
     // Remember a number that has been placed in a cell on the board.
@@ -349,15 +361,16 @@ var Sudoku = {
      * indicating so.  If not, continue to 
      */
     validateBeforeSolve: function() {
-      $('#solving-status').attr('class', 'solving-status');
-      if (!this.started) {
+      // $('#solving-status').attr('class', 'solving-status');
+      Sudoku.picker.close();
+      if (!this.inProgress) {
         return false;
       }
 
       var gridIsValid = Sudoku.game.checkForDuplicateCellContent();
       if (!gridIsValid) {
         var message = 'There are duplicate numbers in some squares, rows or columns';
-        Sudoku.tools.message(message);
+        Sudoku.tools.message.open(message);
         return false;
       }
       
@@ -378,7 +391,7 @@ var Sudoku = {
           });
         $('#solving-status').append(link);
         $('#solving-status').addClass('animated bounceInUp');
-        this.started = false;
+        this.inProgress = false;
       } else {
         // If empty cells remain and no duplicate values are found, let the algorithm find a solution.
         $('#solving-status').show();
@@ -474,19 +487,10 @@ var Sudoku = {
       // Determine if there are additional empty cells to navigate.
       var nextAvailableCell = this.getNextAvailableCell();
 
-      // If no empty cells exist, the puzzle is solved.  Remove the temporary
-      // div telling the user a solution is being searched for and kill the function.
+      // If no empty cells exist, the puzzle is solved.
       if (!nextAvailableCell) {
-
-        setTimeout(function(){
-            if (Sudoku.game.started) {
-              $('#solving-status').attr('class', 'solving-status');
-              $('#solving-status').addClass('animated bounceOutUp');
-              this.started = false;
-            }
-          }, 2000);
+        this.finishGame();
         return true;
-
       } else {
 
         // Available cells remain.  Try a value in the next available cell.
@@ -551,7 +555,19 @@ var Sudoku = {
         }
         return false;
       }
-    }
+    },
+
+    // Set a message signaling the end of the game.
+    finishGame: function() {
+      // If game is not in progress, do not kick off this timer.
+      if (Sudoku.game.inProgress) {
+        this.solvingTimeout = setTimeout(function(){
+            $('#solving-status').attr('class', 'solving-status');
+            $('#solving-status').addClass('animated bounceOutUp');
+            Sudoku.game.inProgress = false;
+          }, 1000);
+      }
+    },
     // End game object
   },
 
@@ -570,7 +586,7 @@ var Sudoku = {
     // Launch the picker UI element.
     launchPicker: function(cell) {
       // If no game in progress, do not launch.
-      if (cell.className == 'number-cell discovered-auto' || !Sudoku.game.started) {
+      if (cell.className == 'number-cell discovered-auto' || !Sudoku.game.inProgress) {
         return false;
       }
 
@@ -658,8 +674,8 @@ var Sudoku = {
     // Initialize click listener for Sudoku board cells.
     this.picker.init();
 
-    // Set some UI elements to an original state.
-    Sudoku.tools.setElements();
+    // Set some UI elements on load
+    Sudoku.tools.pageLoadElements();
   }
 
 };
