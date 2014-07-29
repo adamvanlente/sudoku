@@ -31,6 +31,8 @@ I had a few design ambitions early on, but only a few stuck through the process.
 
 ## Libraries and structure choices
 
+#### Libraries
+
  - I included jQuery for DOM manipulation.  I don't always include jQuery, and the point at which I do is usually the need for ajax, but I didn't want to stress over browser compatability/speed for DOM manipulation, so this was an easy choice.
  
  - Underscore.js was included.  I originally had my own shuffle function, but I brought in Underscore because I believed it would improve performance in the critical solveBoard function.  I also like Underscore's simple _.each call for interating on arrays, though I avoided using it where speed was absolutely critical.
@@ -40,6 +42,31 @@ I had a few design ambitions early on, but only a few stuck through the process.
  - I have been looking for an excuse to use the Animate.css library, and this was the perfect opportunity.  It provides some smooth bounce in/out CSS transitions for the different popups/modals.
  
  - I also included a Google webfont.  They are incredibly easy to implement, and I think they improve the look in feel a great deal.  I often use Roboto (used here) or Open Sans.
+
+#### File structure
+
+<pre>
+ sudoku
+ ------
+   index.html : main elements for sudoku game.
+   /brainstorming : some early attempts at creating a puzzle
+      v0.html
+      v1.html
+      README.md
+   /css
+      _sass_globals.sass : global variables for styles
+      animate.css : libaray used for animations
+      sudoku_style.css : created by sass compiler
+      sudoku_styee.sass : sass styles for sudoku board
+   /images  
+      apple-touch-icon-114x114-precomposed.png : apple home screen icon
+      favicon.ico
+   /js
+      jquery.js : v1.10.0
+      sudoku.js : all logic and ui interactions for the game
+      underscore.js : library for small tasks like shuffling and readable iteration
+   README.md
+</pre>
  
 ## Lessons learned
 
@@ -70,7 +97,7 @@ I kept a record of some tests I did while tinkering with setting up a puzzle for
 
 #### Random board fill method (fill a random number of squares with valid numbers):
 
-<pre>|    Cells Filled  |  Time  |  Solve Recurs  |  Backtracks  |
+<pre>    Cells Filled    Time    Solve Recurs    Backtracks  
          27           111ms        984             919
                        98ms        923             858
                        52ms        442             377
@@ -85,7 +112,7 @@ I kept a record of some tests I did while tinkering with setting up a puzzle for
 
 #### Strategic board fill method (solve puzzle first, clear random cells):
 
-<pre>|    Cells Filled  |  Time  |  Solve Recurs  |  Backtracks  |
+<pre>    Cells Filled    Time    Solve Recurs    Backtracks  
           27           18ms         257              202
                        50ms         547              592
                        57ms         979              924
